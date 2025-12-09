@@ -16,6 +16,8 @@ screen.title("DL Digits")
 screen.geometry("500x500")
 canvas = tk.Canvas(screen, bg = "white", height = 250, width = 250)
 canvas.place(x = 120, y = 100)
+label2 = tk.Label(screen, text = "", font = ("arial", 10), bg = "green", fg = "white", bd = 2)
+label2.place(x = 360, y = 480)
 
 
 def mouseDrawing(event):
@@ -28,21 +30,27 @@ number = ImageDraw.Draw(blankImage)
 
 def Clear():
     global number, blankImage
-    canvas.delete("All")
-    number = 0
-    blankImage = 0
+    canvas.delete("all")
+    blankImage = Image.new("L", (250, 250), color = "white")
+    number = ImageDraw.Draw(blankImage)
+    label2.config(text = "")
 
 
 
 def Predict():
-    global number, blankImage, prediction
+    global prediction
     proccessedImage = blankImage.resize((28, 28))
-    proccessedImage = proccessedImage.convert("L")
+    print(proccessedImage)
+    #plt.imshow(proccessedImage)
     proccessedImage = np.array(proccessedImage)
-    proccessedImage = proccessedImage / 255
+    plt.imshow(proccessedImage)
+    plt.show()
+    proccessedImage = proccessedImage / 255.0
     proccessedImage = np.expand_dims(proccessedImage, axis = 0)
+    #plt.imshow(proccessedImage)
     #print(proccessedImage)
     prediction = Sequential.predict(proccessedImage)
+    print(prediction)
     prediction = np.argmax(prediction)
     label2.config(text = prediction)
     #print(prediction)
@@ -62,15 +70,13 @@ button2 = tk.Button(screen, text="Clear",
                     activebackground="red",
                     activeforeground="black",
                     width=10,
-                    command= lambda: Clear(),
+                    command= Clear,
                     cursor="hand2")
 button2.place(x=330, y=430)
 
 label = tk.Label(screen, text = "Digit Classifer", font = ("arial", 20), bg = "green", fg = "white", bd = 2)
 label.place(x = 160, y = 0)
 
-label2 = tk.Label(screen, text = "", font = ("arial", 10), bg = "green", fg = "white", bd = 2)
-label2.place(x = 360, y = 480)
 
 
 
